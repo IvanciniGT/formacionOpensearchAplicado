@@ -349,3 +349,29 @@ Qué hago? Meto 2 PRIMARIOS... si meto un primario NO HAGO NADA MÁS QUE QUE VAY
     LOGS -> INGESTA o BUSQUEDA?   INGESTA
         3 primarios + 1 réplica
     
+
+
+
+
+POST _analyze
+{
+  "tokenizer": "standard",
+  "filter": [
+      "lowercase", 
+      { "type": "stop", "stopwords": "_spanish_" },
+      "asciifolding"],
+  "text": "Uña"
+}
+
+Cañón
+Canón
+
+
+
+Multi
+Order            -> Keyword
+Presentable
+Filter           -> Keyword
+Searchable       -> text
+eIndexable
+eKeyword

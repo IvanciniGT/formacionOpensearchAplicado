@@ -1,4 +1,4 @@
-# Lab OpenSearch — Índice `usuarios`
+# Lab OpenSearch — Índice `usuarios-ivan`
 
 Laboratorio práctico sobre OpenSearch 3.6.0: salud del clúster, creación de un índice con
 **mappings custom** y un **analizador de texto personalizado** en español, carga de datos
@@ -53,7 +53,7 @@ GET _cat/indices?v
 
 ## 2. Creación del índice con mappings y analizador custom
 
-Creamos el índice `usuarios` con:
+Creamos el índice `usuarios-ivan` con:
 
 - **3 shards primarios** y **1 réplica** (→ 6 shards en total).
 - Un **analizador custom `analizador_es`** que aplica:
@@ -62,7 +62,7 @@ Creamos el índice `usuarios` con:
   - `stop_es` → elimina stopwords en español (`de`, `con`, `la`...).
 
 ```
-PUT usuarios
+PUT usuarios-ivan
 {
   "settings": {
     "number_of_shards": 3,
@@ -111,7 +111,7 @@ PUT usuarios
 ### Probar el analizador
 
 ```
-POST usuarios/_analyze
+POST usuarios-ivan/_analyze
 {
   "analyzer": "analizador_es",
   "text": "Científica de DATOS con María"
@@ -124,7 +124,7 @@ POST usuarios/_analyze
 ### Ver el mapping creado
 
 ```
-GET usuarios/_mapping
+GET usuarios-ivan/_mapping
 ```
 
 ---
@@ -198,7 +198,7 @@ POST _analyze
 ### 2.5.4 Probar el analizador custom del índice
 
 ```
-POST usuarios/_analyze
+POST usuarios-ivan/_analyze
 {
   "analyzer": "analizador_es",
   "text": "Científica de DATOS con María"
@@ -211,7 +211,7 @@ POST usuarios/_analyze
 En vez del nombre del analizador, puedes indicar el **campo** y usa automáticamente su analizador configurado:
 
 ```
-POST usuarios/_analyze
+POST usuarios-ivan/_analyze
 {
   "field": "bio",
   "text": "Científica de DATOS con María"
@@ -223,7 +223,7 @@ POST usuarios/_analyze
 Añade `"explain": true` para depurar qué filtro hace cada transformación:
 
 ```
-POST usuarios/_analyze
+POST usuarios-ivan/_analyze
 {
   "analyzer": "analizador_es",
   "text": "María corrían",
@@ -236,24 +236,24 @@ POST usuarios/_analyze
 
 ---
 
-## 3. Carga de datos de ejemplo (6 usuarios) con `_bulk`
+## 3. Carga de datos de ejemplo (6 usuarios-ivan) con `_bulk`
 
 La API `_bulk` usa formato **NDJSON** (una línea de acción + una línea de documento).
 En Dev Tools se escribe directamente así (la consola gestiona el `Content-Type`):
 
 ```
 POST _bulk
-{ "index": { "_index": "usuarios", "_id": "1" } }
+{ "index": { "_index": "usuarios-ivan", "_id": "1" } }
 { "nombre": "María García López", "email": "maria.garcia@example.com", "edad": 28, "ciudad": "Madrid", "bio": "Ingeniera de software apasionada por la inteligencia artificial", "intereses": ["IA", "running", "lectura"], "activo": true, "fecha_registro": "2024-01-15" }
-{ "index": { "_index": "usuarios", "_id": "2" } }
+{ "index": { "_index": "usuarios-ivan", "_id": "2" } }
 { "nombre": "Juan Martínez Ruiz", "email": "juan.martinez@example.com", "edad": 35, "ciudad": "Barcelona", "bio": "Arquitecto de datos especializado en sistemas distribuidos", "intereses": ["datos", "ciclismo", "fotografía"], "activo": true, "fecha_registro": "2023-06-22" }
-{ "index": { "_index": "usuarios", "_id": "3" } }
+{ "index": { "_index": "usuarios-ivan", "_id": "3" } }
 { "nombre": "Ana Fernández Soto", "email": "ana.fernandez@example.com", "edad": 42, "ciudad": "Valencia", "bio": "Científica de datos con experiencia en machine learning", "intereses": ["ML", "yoga", "viajes"], "activo": false, "fecha_registro": "2022-11-03" }
-{ "index": { "_index": "usuarios", "_id": "4" } }
+{ "index": { "_index": "usuarios-ivan", "_id": "4" } }
 { "nombre": "Carlos Sánchez Díaz", "email": "carlos.sanchez@example.com", "edad": 31, "ciudad": "Madrid", "bio": "Desarrollador backend experto en bases de datos y búsqueda", "intereses": ["backend", "gaming", "música"], "activo": true, "fecha_registro": "2024-03-10" }
-{ "index": { "_index": "usuarios", "_id": "5" } }
+{ "index": { "_index": "usuarios-ivan", "_id": "5" } }
 { "nombre": "Lucía Rodríguez Gil", "email": "lucia.rodriguez@example.com", "edad": 26, "ciudad": "Sevilla", "bio": "Analista de seguridad informática y entusiasta del open source", "intereses": ["seguridad", "linux", "escalada"], "activo": true, "fecha_registro": "2023-09-18" }
-{ "index": { "_index": "usuarios", "_id": "6" } }
+{ "index": { "_index": "usuarios-ivan", "_id": "6" } }
 { "nombre": "Pedro Gómez Moreno", "email": "pedro.gomez@example.com", "edad": 39, "ciudad": "Bilbao", "bio": "DevOps engineer trabajando con Kubernetes y observabilidad", "intereses": ["devops", "kubernetes", "senderismo"], "activo": false, "fecha_registro": "2022-05-30" }
 
 ```
@@ -263,13 +263,13 @@ POST _bulk
 Refrescar para que sean visibles inmediatamente:
 
 ```
-POST usuarios/_refresh
+POST usuarios-ivan/_refresh
 ```
 
 Verificar el conteo:
 
 ```
-GET usuarios/_count
+GET usuarios-ivan/_count
 ```
 → `"count": 6`
 
@@ -280,7 +280,7 @@ GET usuarios/_count
 ### 4.1 Traer todos los documentos
 
 ```
-GET usuarios/_search
+GET usuarios-ivan/_search
 {
   "query": { "match_all": {} }
 }
@@ -289,7 +289,7 @@ GET usuarios/_search
 ### 4.2 Full-text sobre `bio` (usa el analizador custom)
 
 ```
-GET usuarios/_search
+GET usuarios-ivan/_search
 {
   "query": { "match": { "bio": "datos" } }
 }
@@ -299,7 +299,7 @@ GET usuarios/_search
 ### 4.3 Filtro exacto por `keyword`
 
 ```
-GET usuarios/_search
+GET usuarios-ivan/_search
 {
   "query": { "term": { "ciudad": "Madrid" } }
 }
@@ -308,7 +308,7 @@ GET usuarios/_search
 ### 4.4 Rango numérico (edad)
 
 ```
-GET usuarios/_search
+GET usuarios-ivan/_search
 {
   "query": { "range": { "edad": { "gte": 30, "lte": 40 } } }
 }
@@ -317,7 +317,7 @@ GET usuarios/_search
 ### 4.5 Query booleana combinada
 
 ```
-GET usuarios/_search
+GET usuarios-ivan/_search
 {
   "query": {
     "bool": {
@@ -332,7 +332,7 @@ GET usuarios/_search
 ### 4.6 Búsqueda + orden + paginación
 
 ```
-GET usuarios/_search
+GET usuarios-ivan/_search
 {
   "from": 0,
   "size": 3,
@@ -342,10 +342,10 @@ GET usuarios/_search
 }
 ```
 
-### 4.7 Agregación: usuarios por ciudad
+### 4.7 Agregación: usuarios-ivan por ciudad
 
 ```
-GET usuarios/_search
+GET usuarios-ivan/_search
 {
   "size": 0,
   "aggs": { "por_ciudad": { "terms": { "field": "ciudad" } } }
@@ -369,19 +369,19 @@ GET usuarios/_search
 El índice se creó con **3 shards primarios + 1 réplica = 6 shards**, repartidos por los 3 nodos.
 
 ```
-GET _cat/shards/usuarios?v&h=index,shard,prirep,state,docs,node
+GET _cat/shards/usuarios-ivan?v&h=index,shard,prirep,state,docs,node
 ```
 
 **Salida real:**
 
 ```
 index    shard prirep state   docs node
-usuarios 0     p      STARTED    1 opensearch-nodes-2
-usuarios 0     r      STARTED    1 opensearch-nodes-0
-usuarios 1     r      STARTED    3 opensearch-nodes-1
-usuarios 1     p      STARTED    3 opensearch-nodes-0
-usuarios 2     p      STARTED    2 opensearch-nodes-1
-usuarios 2     r      STARTED    2 opensearch-nodes-2
+usuarios-ivan 0     p      STARTED    1 opensearch-nodes-2
+usuarios-ivan 0     r      STARTED    1 opensearch-nodes-0
+usuarios-ivan 1     r      STARTED    3 opensearch-nodes-1
+usuarios-ivan 1     p      STARTED    3 opensearch-nodes-0
+usuarios-ivan 2     p      STARTED    2 opensearch-nodes-1
+usuarios-ivan 2     r      STARTED    2 opensearch-nodes-2
 ```
 
 Observaciones:
@@ -393,7 +393,7 @@ Observaciones:
 Salud específica del índice:
 
 ```
-GET _cluster/health/usuarios
+GET _cluster/health/usuarios-ivan
 ```
 → `status: green` · `active_shards: 6` · `unassigned_shards: 0`
 
@@ -404,7 +404,7 @@ GET _cluster/health/usuarios
 ### 6.1 Stats completas
 
 ```
-GET usuarios/_stats
+GET usuarios-ivan/_stats
 ```
 
 Secciones útiles dentro de `_all.primaries`:
@@ -419,7 +419,7 @@ Secciones útiles dentro de `_all.primaries`:
 ### 6.2 Resumen rápido con `_cat`
 
 ```
-GET _cat/indices/usuarios?v
+GET _cat/indices/usuarios-ivan?v
 ```
 
 Muestra `health`, `status`, `docs.count`, `store.size`, etc. en una sola línea.
@@ -433,10 +433,10 @@ usando **stemming**, pero que **`nombre`** se mantenga literal (sin stemming, pa
 
 La solución es definir **dos analizadores en el mismo índice** y asignar uno a cada campo.
 
-### 7.1 Crear `usuarios_v2` con dos analizadores
+### 7.1 Crear `usuarios-ivan_v2` con dos analizadores
 
 ```
-PUT usuarios_v2
+PUT usuarios-ivan_v2
 {
   "settings": {
     "number_of_shards": 3,
@@ -477,7 +477,7 @@ PUT usuarios_v2
 
 > `bio` → analizador `es_stem` (con stemming) · `nombre` → analizador `es_nostem` (sin stemming).
 
-### 7.2 Reindexar datos desde `usuarios`
+### 7.2 Reindexar datos desde `usuarios-ivan`
 
 No hace falta volver a cargar el bulk: copiamos los documentos con la API `_reindex`.
 Al entrar en el nuevo índice se reanalizan con los nuevos analizadores.
@@ -485,8 +485,8 @@ Al entrar en el nuevo índice se reanalizan con los nuevos analizadores.
 ```
 POST _reindex?refresh=true
 {
-  "source": { "index": "usuarios" },
-  "dest":   { "index": "usuarios_v2" }
+  "source": { "index": "usuarios-ivan" },
+  "dest":   { "index": "usuarios-ivan_v2" }
 }
 ```
 → `"created": 6`
@@ -494,7 +494,7 @@ POST _reindex?refresh=true
 ### 7.3 Comprobar cómo tokeniza cada analizador
 
 ```
-POST usuarios_v2/_analyze
+POST usuarios-ivan_v2/_analyze
 {
   "analyzer": "es_stem",
   "text": "distribuidos distribuido"
@@ -503,7 +503,7 @@ POST usuarios_v2/_analyze
 → `["distribu", "distribu"]`
 
 ```
-POST usuarios_v2/_analyze
+POST usuarios-ivan_v2/_analyze
 {
   "analyzer": "es_nostem",
   "text": "distribuidos distribuido"
@@ -521,7 +521,7 @@ POST usuarios_v2/_analyze
 El documento de Juan dice *"...sistemas **distribuidos**"*. Buscamos el singular `distribuido`:
 
 ```
-GET usuarios/_search
+GET usuarios-ivan/_search
 {
   "_source": ["nombre"],
   "query": { "match": { "bio": "distribuido" } }
@@ -530,7 +530,7 @@ GET usuarios/_search
 → `total: 0` (NO encuentra: `distribuido` ≠ `distribuidos`)
 
 ```
-GET usuarios_v2/_search
+GET usuarios-ivan_v2/_search
 {
   "_source": ["nombre"],
   "query": { "match": { "bio": "distribuido" } }
@@ -540,7 +540,7 @@ GET usuarios_v2/_search
 
 **Resultado:**
 
-| Búsqueda `bio: "distribuido"` | Índice `usuarios` (sin stemming) | Índice `usuarios_v2` (con stemming) |
+| Búsqueda `bio: "distribuido"` | Índice `usuarios-ivan` (sin stemming) | Índice `usuarios-ivan_v2` (con stemming) |
 |---|---|---|
 | Documentos encontrados | **0** | **1** (Juan) |
 
@@ -554,11 +554,11 @@ GET usuarios_v2/_search
 ## 8. Limpieza (opcional)
 
 ```
-DELETE usuarios
+DELETE usuarios-ivan
 ```
 
 ```
-DELETE usuarios_v2
+DELETE usuarios-ivan_v2
 ```
 
 ---
@@ -566,11 +566,14 @@ DELETE usuarios_v2
 ## Resumen del flujo
 
 ```mermaid
-flowchart LR
+flowchart TB
     A[Salud clúster] --> B[Crear índice + analizador custom]
-    B --> C[Carga bulk 6 usuarios]
+    B --> C[Carga bulk 6 usuarios-ivan]
     C --> D[Queries y agregaciones]
     D --> E[Reparto de shards]
     E --> F[Estadísticas del índice]
     F --> G[Varios analizadores + reindex]
 ```
+Uña
+
+una
